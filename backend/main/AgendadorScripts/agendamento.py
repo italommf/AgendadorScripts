@@ -16,29 +16,32 @@ django.setup()
 
 from AgendadorScripts.models import Agendamento, Scripts
 
-def executar_script(caminho):
+def executar_script(script):
         
-        if '.py' in caminho:
+        if '.py' in script.caminho_script:
 
-            print(f"SCI Atendimento aberto ás : {datetime.now().strftime('%H:%M')}")
+            print(f"Script '.py' {script.nome} aberto no horário: {datetime.now().strftime('%H:%M')}")
             processo = subprocess.Popen(
-                ["python", str(caminho)],
+                ["python", str(script.caminho_script)],
                 creationflags=subprocess.CREATE_NEW_CONSOLE
             )
             process_id = processo.pid
             return process_id
         
-        elif '.bat' in caminho:
+        elif '.bat' in script.caminho_script:
 
-            print(f"Executando script .bat às: {datetime.now().strftime('%H:%M')}")
+            print(f"Script '.bat' {script.nome} aberto no horário: {datetime.now().strftime('%H:%M')}")
+
+            comando = f'start cmd /c "{script.caminho_script}"'
+
             processo = subprocess.Popen(
-                [str(caminho)],
+                comando, 
                 shell=True,
                 creationflags=subprocess.CREATE_NEW_CONSOLE
             )
             process_id = processo.pid
             return process_id
-
+ 
 def verificar_agendamentos():
 
     agora = datetime.now()
@@ -63,7 +66,7 @@ def verificar_agendamentos():
 
         if agora_hora_minuto >= proxima_execucao_hora_minuto:
 
-            executar_script(script.caminho_script)
+            executar_script(script)
 
             if intervalo_de_repeticao == 'DIA':
                 proxima_execucao = agora + timedelta(days=intervalo_tempo)
