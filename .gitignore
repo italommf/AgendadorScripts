@@ -1,0 +1,6 @@
+.vscode
+.venv
+.env
+/Scripts Agendados
+db.sqlite3
+__pycache__
