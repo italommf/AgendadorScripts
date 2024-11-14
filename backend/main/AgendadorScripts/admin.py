@@ -11,13 +11,13 @@ class AgendamentoAdmin(admin.ModelAdmin):
             'fields': ('script', 'frequencia')
         }),
         ('Configurações de Repetição', {
-            'fields': ('tempo_repeticao', 'intervalo', 'hora_inicial'),
+            'fields': ('tempo_repeticao', 'intervalo', 'hora_inicial', 'hora_final'),
             'classes': ('collapse',),
             'description': 'Configure o intervalo de repetição para execuções frequentes.'
         }),
-        ('Data e Hora', {
+        ('Proxima Execução', {
             'fields': ('data_agendamento',),
-            'description': 'Preencha se o agendamento for único.'
+            'description': 'Data e hora da próxima execução. Se vazio, o script executara imediatamente'
         }),
     )
     ordering = ('frequencia', 'hora_inicial')

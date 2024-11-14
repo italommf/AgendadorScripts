@@ -52,19 +52,62 @@ def verificar_agendamentos():
         script = agendamento.script
         hora_inicial = agendamento.hora_inicial
         intervalo_de_repeticao = agendamento.tempo_repeticao  
-        intervalo_tempo = agendamento.intervalo 
+        intervalo_tempo = agendamento.intervalo
+        hora_final = agendamento.hora_final
 
-        primeira_execucao = datetime.combine(agora.date(), hora_inicial)
+        # primeira_execucao = datetime.combine(agora.date(), hora_inicial)
 
         if agendamento.data_agendamento is None:
-            proxima_execucao = primeira_execucao
+
+            amanha = datetime.now().date() + timedelta(days=1)
+            proxima_execucao = datetime.combine(amanha, hora_inicial)
+
         else:
+            
             proxima_execucao = agendamento.data_agendamento
 
         agora_hora_minuto = agora.replace(second=0, microsecond=0)
         proxima_execucao_hora_minuto = proxima_execucao.replace(second=0, microsecond=0)
 
-        if agora_hora_minuto >= proxima_execucao_hora_minuto:
+        if hora_final:
+
+            if agora_hora_minuto >= datetime.combine(agora.date(), hora_inicial) and agora_hora_minuto <= datetime.combine(agora.date(), hora_final):
+            
+                if not agendamento.data_agendamento: 
+
+                    executar_script(script)
+
+                    if intervalo_de_repeticao == 'DIA':
+                        proxima_execucao = agora + timedelta(days=intervalo_tempo)
+                    elif intervalo_de_repeticao == 'HORA':
+                        proxima_execucao = agora + timedelta(hours=intervalo_tempo)
+                    elif intervalo_de_repeticao == 'MIN':
+                        proxima_execucao = agora + timedelta(minutes=intervalo_tempo)
+
+                    agendamento.data_agendamento = proxima_execucao
+                    agendamento.save()
+
+                elif agora_hora_minuto == proxima_execucao_hora_minuto:
+
+                    executar_script(script)
+
+                    if intervalo_de_repeticao == 'DIA':
+                        proxima_execucao = agora + timedelta(days=intervalo_tempo)
+                    elif intervalo_de_repeticao == 'HORA':
+                        proxima_execucao = agora + timedelta(hours=intervalo_tempo)
+                    elif intervalo_de_repeticao == 'MIN':
+                        proxima_execucao = agora + timedelta(minutes=intervalo_tempo)
+
+                    agendamento.data_agendamento = proxima_execucao
+                    agendamento.save()
+                
+            else:
+                
+                amanha = datetime.now().date() + timedelta(days=1)
+                agendamento.data_agendamento = datetime.combine(amanha, hora_inicial)
+                agendamento.save() 
+
+        elif agora_hora_minuto >= proxima_execucao_hora_minuto:
 
             executar_script(script)
 

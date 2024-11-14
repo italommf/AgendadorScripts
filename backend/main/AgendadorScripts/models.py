@@ -80,13 +80,22 @@ class Agendamento(models.Model):
     hora_inicial = models.TimeField(
         "Hora Inicial",
         blank = True, 
-        null = True
+        null = True,
+        help_text = "Horário da primeira execução do Script."
+    )
+
+    hora_final = models.TimeField(
+        "Hora Final",
+        blank = True, 
+        null = True,
+        help_text = "Horário da última execução do Script."
     )
 
     data_agendamento = models.DateTimeField(
-        "Data do Agendamento", 
+        "Data e Hora da Proxima Execução", 
         blank = True, 
-        null = True
+        null = True,
+        help_text = "Data: Ano-Mês-Dia"
     )
 
     class Meta:
